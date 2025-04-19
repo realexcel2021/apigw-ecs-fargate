@@ -12,7 +12,7 @@ services:
 
   backend:
     build: ./backend
-    command: /bin/bash -c "poetry run sh /backend/prestart.sh"
+    command: /bin/bash -c "poetry run sh ./prestart.sh && poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
     depends_on:
@@ -23,6 +23,29 @@ services:
       POSTGRES_DB: app
       POSTGRES_USER: app
       POSTGRES_PASSWORD: changethis123
+      # Domain
+      # This would be set to the production domain with an env var on deployment
+      DOMAIN: localhost
+
+      # Environment: local, staging, production
+      ENVIRONMENT: local
+
+      PROJECT_NAME: "Full Stack FastAPI Project"
+      STACK_NAME: full-stack-fastapi-project
+
+      # Backend
+      BACKEND_CORS_ORIGINS: "http://localhost,http://localhost:5173,https://localhost,https://localhost:5173"
+      SECRET_KEY: changethis123
+      FIRST_SUPERUSER: chanllenge@devopsdojo.com
+      FIRST_SUPERUSER_PASSWORD: devopsdojo57
+      USERS_OPEN_REGISTRATION: True
+      SMTP_HOST:
+      SMTP_USER:
+      SMTP_PASSWORD:
+      EMAILS_FROM_EMAIL: info@example.com
+      SMTP_TLS: True
+      SMTP_SSL: False
+      SMTP_PORT: 587
 
 volumes:
   pgdata:

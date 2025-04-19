@@ -1,0 +1,11 @@
+name: infra-pulumi
+description: API Gateway ECS & Fargate integration
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-python
