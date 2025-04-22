@@ -1,23 +1,24 @@
 import pulumi
-from pulumi_aws import ec2
-from securitygroup import web_server_security_group
+import pulumi_aws as aws
+from resources.vpc import vpc_setup
+from resources.secret import create_secret_manager
 
-web_server = ec2.Instance("web-server",
-    ami="ami-0c55b159cbfafe1f0",  # Amazon Linux 2 AMI  
-    instance_type="t2.micro",
-    tags={"Name": "web-server"},
-    vpc_security_group_ids=[web_server_security_group.id],
-    subnet_id="subnet-023e6010495b6ed8c",  # Replace with your subnet ID
-    associate_public_ip_address=True,
-    user_data="""#!/bin/bash
-        yum update -y  
-        yum install -y httpd
-        systemctl start httpd
-        systemctl enable httpd
-        echo "Hello from $(hostname -f)" > /var/www/html/index.html
-        """
-    )
 
-pulumi.export("instance_id", web_server.id)
-pulumi.export("instance_public_ip", web_server.public_ip)
+# set up VPC and subnets
 
+project_tags = {
+    "Name": "apigw-ecs-fargate-vpc",
+    "Environment": "dev",
+    "Project": "fastapi-project"
+}
+
+project_vpc = vpc_setup(tags=project_tags)
+
+
+
+project_secret = create_secret_manager(
+    project_name="fastapi-project",
+    db_endpoint="db-endpoint",
+    db_name="db-name",
+    db_username="db-username",
+    db_password="db-password")

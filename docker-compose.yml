@@ -47,5 +47,16 @@ services:
       SMTP_SSL: False
       SMTP_PORT: 587
 
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        - BACKEND_URL=http://localhost:8000
+    ports:
+      - "80:80"
+      - "5173:5173"
+    depends_on:
+      - backend
+
 volumes:
   pgdata:
